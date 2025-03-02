@@ -1,0 +1,119 @@
+/* Shop Page Styles */
+.shop-button {
+  background: linear-gradient(135deg, #6366f1 0%, #3b82f6 100%);
+  transition: all 0.3s ease;
+}
+
+.shop-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(59, 130, 246, 0.2);
+}
+
+/* Product Card Hover Effects */
+.product-card {
+  transition: transform 0.2s ease-in-out;
+}
+
+.product-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+/* Category Button Hover Effects */
+.category-button {
+  transition: all 0.2s ease;
+}
+
+.category-button:hover {
+  background: linear-gradient(135deg, #6366f1 0%, #3b82f6 100%);
+  color: white;
+}
+
+/* Glassmorphism Effects */
+.glass-effect {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Cart Animation */
+.cart-enter {
+  transform: translateX(100%);
+}
+
+.cart-enter-active {
+  transform: translateX(0);
+  transition: transform 300ms ease-in-out;
+}
+
+/* Loading Animation */
+@keyframes pulse {
+  0% { opacity: 0.5; }
+  50% { opacity: 0.8; }
+  100% { opacity: 0.5; }
+}
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Range Input Styling */
+input[type="range"] {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+  outline: none;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  background: linear-gradient(135deg, #6366f1 0%, #3b82f6 100%);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+input[type="range"]::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+}
+
+/* Cart Slide Animation */
+.cart-slide-enter {
+  transform: translateX(100%);
+}
+
+.cart-slide-enter-active {
+  transform: translateX(0%);
+  transition: transform 300ms ease-in-out;
+}
+
+.cart-slide-exit {
+  transform: translateX(0%);
+}
+
+.cart-slide-exit-active {
+  transform: translateX(100%);
+  transition: transform 300ms ease-in-out;
+}
