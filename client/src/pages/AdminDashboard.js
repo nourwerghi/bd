@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { api } from '../lib/api';
 import AddProduct from './AddProduct';
+import ProductImage from '../components/ProductImage/ProductImage';
 import './AdminDashboard.css';
 
 const AdminDashboard = () => {
@@ -198,13 +199,10 @@ const AdminDashboard = () => {
             <tr key={product._id}>
               <td>
                 <div className="product-image">
-                  <img 
-                    src={`http://localhost:4991/uploads/${product.imageUrl}`} 
+                  <ProductImage
+                    imageUrl={product.imageUrl}
                     alt={product.name}
-                    onError={(e) => {
-                      e.target.onerror = null;
-                      e.target.src = '/placeholder.png';
-                    }}
+                    className="w-full h-48 object-cover"
                   />
                 </div>
               </td>

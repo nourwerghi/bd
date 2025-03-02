@@ -7,8 +7,8 @@ const AddProduct = () => {
     name: '',
     description: '',
     price: '',
-    category: '',
-    stock: ''
+    category: 'Electronics', // Set default category
+    stock: '1' // Set default stock
   });
   const [image, setImage] = useState(null);
   const [preview, setPreview] = useState(null);
@@ -18,12 +18,20 @@ const AddProduct = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+    let processedValue = value;
+
+    // Add validation for specific fields
+    if (name === 'price') {
+      processedValue = Math.max(0, value).toString();
+    } else if (name === 'stock') {
+      processedValue = Math.max(0, Math.floor(Number(value))).toString();
+    }
+
     setProduct(prev => ({
       ...prev,
-      [name]: value
+      [name]: processedValue
     }));
   };
-
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -72,7 +80,15 @@ const AddProduct = () => {
       setLoading(false);
     }
   };
-
+  const CATEGORIES = [
+    'Electronics',
+    'Clothing',
+    'Home & Garden',
+    'Sports',
+    'Toys & Games',
+    'Beauty',
+    'Jewelry'
+  ];
   return (
     <div className="add-product">
       <h2>Ajouter un Nouveau Produit</h2>
@@ -120,16 +136,18 @@ const AddProduct = () => {
 
         <div className="form-group">
           <label htmlFor="category">Catégorie</label>
-          <input
-            type="text"
+          <select
             id="category"
             name="category"
             value={product.category}
             onChange={handleInputChange}
             required
-          />
+          >
+            {CATEGORIES.map(cat => (
+              <option key={cat} value={cat}>{cat}</option>
+            ))}
+          </select>
         </div>
-
         <div className="form-group">
           <label htmlFor="stock">Stock</label>
           <input

@@ -1,0 +1,129 @@
+.payment-form {
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.payment-form h2 {
+  margin-bottom: 1.5rem;
+  color: #333;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.total-amount {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.25rem;
+  background-color: #fff7ed;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  border: 1px solid #fed7aa;
+}
+
+.total-amount .amount {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #ea580c;
+}
+
+.payment-method-selector {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.method-button {
+  flex: 1;
+  padding: 0.75rem;
+  border: 2px solid #fed7aa;
+  border-radius: 8px;
+  background: white;
+  color: #ea580c;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.method-button:hover {
+  border-color: #ea580c;
+  background: #fff7ed;
+}
+
+.method-button.active {
+  border-color: #ea580c;
+  background: #ea580c;
+  color: white;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #4b5563;
+  font-weight: 500;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: border-color 0.2s;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #ea580c;
+  box-shadow: 0 0 0 2px rgba(234, 88, 12, 0.1);
+}
+
+.form-group textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.error {
+  display: block;
+  margin-top: 0.5rem;
+  color: #dc2626;
+  font-size: 0.875rem;
+}
+
+.submit-button {
+  width: 100%;
+  padding: 1rem;
+  background: #ea580c;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.submit-button:hover {
+  background: #c2410c;
+  transform: translateY(-1px);
+}
+
+.submit-button:disabled {
+  background: #fed7aa;
+  cursor: not-allowed;
+  transform: none;
+}

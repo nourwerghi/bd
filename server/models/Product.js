@@ -40,7 +40,7 @@ const productSchema = new mongoose.Schema({
 productSchema.methods.toJSON = function() {
   const obj = this.toObject();
   if (obj.imageUrl && !obj.imageUrl.startsWith('http')) {
-    obj.imageUrl = `http://localhost:4991/uploads/${obj.imageUrl}`;
+    obj.imageUrl = `http://localhost:4990/uploads/${obj.imageUrl}`;
   }
   return obj;
 };
