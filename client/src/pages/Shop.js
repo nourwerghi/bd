@@ -3,7 +3,6 @@ import { Search, ShoppingCart, Plus, Minus, X } from 'lucide-react';
 import { useCartStore } from '../lib/store';
 import { api } from '../lib/api';
 import { Link } from 'react-router-dom';
-import ProductImage from '../components/ProductImage/ProductImage';
 import PaymentForm from '../components/PaymentForm/PaymentForm';
 
 export default function Shop() {
@@ -13,56 +12,15 @@ export default function Shop() {
   const [searchQuery, setSearchQuery] = useState('');
   const [showCart, setShowCart] = useState(false);
   const [showPayment, setShowPayment] = useState(false);
-  const [paymentStatus, setPaymentStatus] = useState({ loading: false, error: null, success: false });
-  const { items, addItem, removeItem, updateQuantity, total, clearCart } = useCartStore();
+  const { items, addItem, removeItem, updateQuantity, total } = useCartStore();
 
   useEffect(() => {
     fetchProducts();
   }, [selectedCategory, searchQuery]);
 
-  const handlePaymentSubmit = async (paymentData) => {
-    setPaymentStatus({ loading: true, error: null, success: false });
-    try {
-      // Create order with payment and cart data
-      const orderData = {
-        items: items.map(item => ({
-          productId: item.id,
-          quantity: item.quantity,
-          price: item.price
-        })),
-        total,
-        paymentMethod: paymentData.paymentMethod,
-        shippingAddress: paymentData.formData.deliveryAddress,
-        paymentDetails: paymentData.formData
-      };
-
-      // Submit order to backend
-      await api.orders.create(orderData);
-      
-      // Clear cart and show success message
-      clearCart();
-      setPaymentStatus({ loading: false, error: null, success: true });
-      
-      // Close payment panel after successful order
-      setTimeout(() => {
-        setShowPayment(false);
-        setShowCart(false);
-        setPaymentStatus({ loading: false, error: null, success: false });
-      }, 2000);
-    } catch (error) {
-      console.error('Payment error:', error);
-      setPaymentStatus({
-        loading: false,
-        error: error.message || 'An error occurred during payment processing. Please try again.',
-        success: false
-      });
-    }
-  };
-
   const fetchProducts = async () => {
     try {
       const data = await api.products.getAll(selectedCategory === 'all' ? undefined : selectedCategory, searchQuery);
-      console.log('Products received:', data); // Ajout de cette ligne pour déboguer
       setProducts(data);
     } catch (error) {
       console.error('Error fetching products:', error);
@@ -183,26 +141,27 @@ export default function Shop() {
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {products.map((product) => (
                   <div key={product._id} className="bg-white rounded-lg shadow overflow-hidden">
-                    <div className="aspect-w-3 aspect-h-2">
-                      <ProductImage
-                        imageUrl={product.imageUrl}
-                        alt={product.name}
-                        className="w-full h-48 object-cover hover:scale-105 transition-transform duration-300"
-                      />
-                    </div>
+                        <div className="aspect-w-3 aspect-h-2">
+                          <img
+                            src={product.image}
+                            alt={product.name}
+                            className="w-full h-48 object-cover"
+                            onError={(e) => {
+                              e.target.onerror = null;
+                              e.target.src = '/placeholder.png';
+                            }}
+                          />
+                        </div>
                     <div className="p-4">
                       <h3 className="text-lg font-medium text-gray-900">{product.name}</h3>
                       <p className="mt-1 text-gray-500 text-sm line-clamp-2">{product.description}</p>
                       <div className="mt-4 flex items-center justify-between">
                         <span className="text-lg font-medium text-gray-900">${product.price}</span>
                         <button
-                          onClick={() => {
-                            addItem(product);
-                            setShowCart(true);
-                          }}
+                          onClick={() => addItem(product)}
                           className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
                         >
-                          Add to Shop
+                          Add to Cart
                         </button>
                       </div>
                     </div>
@@ -241,10 +200,13 @@ export default function Shop() {
                           <ul className="divide-y divide-gray-200">
                             {items.map((item) => (
                               <li key={item.id} className="py-6 flex">
-                                <ProductImage
-                                  imageUrl={item.imageUrl}
+                                <img
+                                  src={item.image || 'https://via.placeholder.com/300x300?text=No+Image'}
                                   alt={item.name}
                                   className="w-24 h-24 rounded-lg object-cover"
+                                  onError={(e) => {
+                                    e.target.src = 'https://via.placeholder.com/300x300?text=No+Image';
+                                  }}
                                 />
                                 <div className="ml-4 flex-1">
                                   <div className="flex justify-between">
@@ -291,12 +253,10 @@ export default function Shop() {
                       </div>
                       <div className="mt-6">
                         <button
-                          onClick={() => {
-                            setShowPayment(true);
-                          }}
+                          onClick={handleCheckout}
                           className="w-full bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors"
                         >
-                          Proceed to Checkout
+                          Checkout
                         </button>
                       </div>
                     </div>
@@ -307,8 +267,7 @@ export default function Shop() {
           </div>
         </div>
       )}
-
-      {/* Payment Panel */}
+      {/* Payment Form Modal */}
       {showPayment && (
         <div className="fixed inset-0 overflow-hidden z-50">
           <div className="absolute inset-0 overflow-hidden">
@@ -318,7 +277,7 @@ export default function Shop() {
                 <div className="h-full flex flex-col bg-white shadow-xl">
                   <div className="flex-1 py-6 overflow-y-auto px-4 sm:px-6">
                     <div className="flex items-start justify-between mb-6">
-                      <h2 className="text-lg font-medium text-gray-900">Checkout</h2>
+                      <h2 className="text-lg font-medium text-gray-900">Payment</h2>
                       <button
                         onClick={() => setShowPayment(false)}
                         className="text-gray-400 hover:text-gray-500"
@@ -326,20 +285,7 @@ export default function Shop() {
                         <X className="h-6 w-6" />
                       </button>
                     </div>
-                    {paymentStatus.error && (
-                      <div className="mb-4 bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg">
-                        {paymentStatus.error}
-                      </div>
-                    )}
-                    {paymentStatus.success && (
-                      <div className="mb-4 bg-green-50 border border-green-200 text-green-600 px-4 py-3 rounded-lg">
-                        Order placed successfully! Thank you for your purchase.
-                      </div>
-                    )}
-                    <PaymentForm
-                      onSubmit={handlePaymentSubmit}
-                      loading={paymentStatus.loading}
-                    />
+                    <PaymentForm onSubmit={handlePaymentSubmit} />
                   </div>
                 </div>
               </div>
@@ -349,4 +295,39 @@ export default function Shop() {
       )}
     </div>
   );
+}
+
+function handleCheckout() {
+  setShowCart(false);
+  setShowPayment(true);
+}
+
+async function handlePaymentSubmit(paymentData) {
+  try {
+    // Create order data
+    const orderData = {
+      items: items,
+      total: total,
+      paymentMethod: paymentData.paymentMethod,
+      deliveryAddress: paymentData.formData.deliveryAddress,
+      city: paymentData.formData.city,
+      postalCode: paymentData.formData.postalCode,
+      phone: paymentData.formData.phone
+    };
+
+    // Process the order through the API
+    const response = await api.orders.create(orderData);
+
+    if (response.success) {
+      // Clear cart after successful payment
+      setShowPayment(false);
+      clearCart();
+      alert('Order placed successfully! You will receive a confirmation email shortly.');
+    } else {
+      throw new Error('Failed to process order');
+    }
+  } catch (error) {
+    console.error('Payment error:', error);
+    alert('Payment failed. Please try again.');
+  }
 }

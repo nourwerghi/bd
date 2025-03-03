@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { api } from '../lib/api';
 import { Link } from 'react-router-dom';
 import AddProductForm from '../components/AddProductForm';
+import ProductImage from '../components/ProductImage/ProductImage';
 
 const CATEGORIES = [
   'Electronics',
@@ -170,14 +171,10 @@ const Dashboard = () => {
                     {filteredProducts.map(product => (
                       <div key={product._id} className="bg-white rounded-lg shadow overflow-hidden">
                         <div className="aspect-w-3 aspect-h-2">
-                          <img
-                            src={product.imageUrl}
+                          <ProductImage
+                            imageUrl={product.imageUrl}
                             alt={product.name}
                             className="w-full h-48 object-cover"
-                            onError={(e) => {
-                              e.target.onerror = null;
-                              e.target.src = '/placeholder.png';
-                            }}
                           />
                         </div>
                         <div className="p-4">

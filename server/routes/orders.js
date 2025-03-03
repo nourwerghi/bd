@@ -4,6 +4,7 @@ const Order = require('../models/Order');
 const Product = require('../models/Product');
 const User = require('../models/User');
 const auth = require('../middleware/auth');
+const { sendOrderNotification } = require('../utils/emailService');
 
 // Create order
 router.post('/', auth, async (req, res) => {
@@ -32,6 +33,12 @@ router.post('/', auth, async (req, res) => {
     });
 
     await order.save();
+
+    // Send email notification to admin
+    const populatedOrder = await Order.findById(order._id)
+      .populate('user', 'username')
+      .populate('items.product', 'name');
+    await sendOrderNotification(populatedOrder);
 
     // Mettre à jour le stock et les statistiques des vendeurs
     for (const item of items) {

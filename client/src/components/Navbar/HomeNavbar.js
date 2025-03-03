@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { api } from '../../lib/api';
 import './Navbar.css';
+import NotificationButton from './NotificationButton';
 
 const HomeNavbar = ({ user, setUser }) => {
   const navigate = useNavigate();
@@ -103,6 +104,7 @@ const HomeNavbar = ({ user, setUser }) => {
                   {/* User Menu */}
                   <div className="relative ml-3">
                     <div className="flex items-center space-x-3">
+                      <NotificationButton />
                       <button
                         type="button"
                         className="group relative"
@@ -229,6 +231,7 @@ const HomeNavbar = ({ user, setUser }) => {
                   </div>
                   <div className="ml-3">
                     <div className="text-base font-medium text-white">{user.username}</div>
+                    <NotificationButton />
                   </div>
                 </div>
                 <div className="mt-3 space-y-1">

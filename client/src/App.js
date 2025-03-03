@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { NotificationProvider } from './contexts/NotificationContext';
 import Navbar from './components/Navbar/Navbar';
 import PrivateRoute from './components/routes/PrivateRoute';
 import AdminRoute from './components/routes/AdminRoute';
@@ -52,7 +53,8 @@ function AppContent() {
   }
 
   return (
-    <div>
+    <NotificationProvider>
+      <div>
       {location.pathname !== '/' && <Navbar user={user} setUser={setUser} />}
       <Routes>
         {/* Public Routes */}
@@ -98,6 +100,7 @@ function AppContent() {
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </div>
+    </NotificationProvider>
   );
 }
 

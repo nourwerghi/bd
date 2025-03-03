@@ -36,11 +36,27 @@ const productSchema = new mongoose.Schema({
   }
 });
 
-// Ajouter l'URL complète de l'image
+// Validate and transform image URL
 productSchema.methods.toJSON = function() {
   const obj = this.toObject();
-  if (obj.imageUrl && !obj.imageUrl.startsWith('http')) {
-    obj.imageUrl = `http://localhost:4990/uploads/${obj.imageUrl}`;
+  if (obj.imageUrl) {
+    if (!obj.imageUrl.startsWith('http')) {
+      // Use environment variable for API URL with fallback
+      const apiUrl = process.env.API_URL || 'http://localhost:5000';
+      // Ensure proper URL path construction
+      const imagePath = obj.imageUrl.startsWith('/') ? obj.imageUrl.substring(1) : obj.imageUrl;
+      obj.imageUrl = `${apiUrl}/uploads/${imagePath}`;
+    }
+    // Validate if URL is properly formed
+    try {
+      new URL(obj.imageUrl);
+    } catch (error) {
+      // If URL is invalid, use a fallback image
+      obj.imageUrl = `${process.env.API_URL || 'http://localhost:5000'}/placeholder.png`;
+    }
+  } else {
+    // Provide fallback for missing images
+    obj.imageUrl = `${process.env.API_URL || 'http://localhost:5000'}/placeholder.png`;
   }
   return obj;
 };

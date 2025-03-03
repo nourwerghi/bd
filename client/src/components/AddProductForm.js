@@ -54,8 +54,7 @@ const AddProductForm = ({ onProductAdded }) => {
       if (image) {
         data.append('image', image);
       }
-
-      await api.admin.addProduct(data);
+      const response = await api.admin.addProduct(data);
       
       // Réinitialiser le formulaire
       setFormData({
@@ -72,8 +71,8 @@ const AddProductForm = ({ onProductAdded }) => {
       const fileInput = document.querySelector('input[type="file"]');
       if (fileInput) fileInput.value = '';
 
-      if (onProductAdded) {
-        onProductAdded();
+      if (onProductAdded && response) {
+        onProductAdded(response);
       }
     } catch (err) {
       setError(err.message || 'Erreur lors de l\'ajout du produit');
